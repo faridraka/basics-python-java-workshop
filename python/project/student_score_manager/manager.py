@@ -86,6 +86,13 @@ class StudentManager:
         s = Student(name)
         # TODO: implement penambahan mahasiswa
         # Hint: gunakan loop untuk input banyak score dari user, pakai method _parse_score() dan add_score(), lalu tambahkan ke students List
+        while True:
+            raw_score = input("Masukkan nilai (atau kosong untuk selesai):").strip()
+            if not raw_score:
+                break
+            score = self._parse_score(raw_score)
+            s.add_score(score)
+        self.students.append(s)
         print("✅ Mahasiswa ditambahkan.")
 
     def list_students(self) -> None:
@@ -95,11 +102,27 @@ class StudentManager:
         print("\n== Daftar Mahasiswa ==")
 
         # TODO: implementasi penampilan daftar mahasiswa beserta info singkatnya dengan memanggil method infoLine()
+        for student in self.students:
+            print(student.infoLine())
 
     def add_score_to_student(self) -> None:
         # TODO: implement penambahan score ke mahasiswa
         # Hint: minta input nama mahasiswa, cari dengan _find_by_name(), lalu minta input score baru dan tambahkan
-        print("✅ Nilai ditambahkan.")
+        name_input = input("Masukkan nama Mahasiswa:").strip()
+
+        find_by_name = self._find_by_name(name_input)
+        if not find_by_name: 
+            print("Mahasiswa tidak di temukan")
+            return
+        print(find_by_name.infoLine())
+
+        while True:
+            raw_score = input("Tambahkan nilai (atau kosong untuk selesai):").strip()
+            if not raw_score:
+                break
+            score = self._parse_score(raw_score)
+            find_by_name.add_score(score)
+            print("✅ Nilai ditambahkan.")
 
     def edit_student_score(self) -> None:
         # TODO: implement edit score mahasiswa
@@ -126,10 +149,38 @@ class StudentManager:
 
     def delete_student_score(self) -> None:
         # TODO: implement hapus score mahasiswa
+        name = input("Nama mahasiswa yang nilai akan di hapus: ").strip()
+        s = self._find_by_name(name)
+        if not s:
+            print("Mahasiswa tidak ditemukan.")
+            return
+        
+        print(f"Nama Mahasiswa : {s.name}")
+        for index,score in enumerate(s.scores):
+            print(f"{index}) {score}")
+        
+        choice_index_score = int(input("Masukkan index nilai yang akan di hapus: ").strip())
+
+        s.remove_score(choice_index_score)
         print("🗑️ Nilai dihapus.")
 
     def edit_student_name(self) -> None:
         # TODO: implement edit nama mahasiswa
+        name = input("Nama mahasiswa yang akan di ganti: ").strip()
+        s = self._find_by_name(name)
+        if not s:
+            print("Mahasiswa tidak ditemukan.")
+            return
+        
+        new_name = input("Masukkan Nama baru: ").strip()
+
+        if not new_name:
+            print("Nama tidak boleh kosong")
+            return
+        if self._find_by_name(new_name):
+            print("Nama sudah di pakai Mahasiswa lain")
+
+        s.name = new_name
         print("✅ Nama mahasiswa diperbarui.")
 
     def delete_student(self) -> None:

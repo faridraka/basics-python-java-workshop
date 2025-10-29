@@ -12,17 +12,20 @@ class Student:
     def add_score(self, value: float) -> None:
         self._validate_score(value)
         # TODO: implement penambahan score
+        self.scores.append(value)
 
     def edit_score(self, index: int, new_value: float) -> None:
         if index < 0 or index >= len(self.scores):
             raise IndexError("Index nilai tidak valid")
         self._validate_score(new_value)
         # TODO: edit score dengan specific index
+        self.scores[index] = new_value
 
     def remove_score(self, index: int) -> None:
         if index < 0 or index >= len(self.scores):
             raise IndexError("Index nilai tidak valid")
         # TODO: hapus score dengan specific index
+        self.scores.pop(index)
 
     # ---------- derived metrics ----------
     def average(self) -> float:
@@ -32,11 +35,23 @@ class Student:
     def grade(self) -> str:
         avg = self.average()
         # TODO: kembalikan grade berdasarkan kondisi average
-        return "E"
+        if avg >= 90:
+            return "A"
+        elif avg >= 80:
+            return "B"
+        elif avg >= 70:
+            return "C"
+        elif avg >= 50:
+            return "D"
+        else:
+            return "E"
+
 
     # ---------- utils ----------
     # TODO: buat fungsi infoLine() yang return string dengan format:
     # Nama | scores=[..] | avg=.. | grade=..
+    def infoLine(self):
+        return f"{self.name} | score={self.scores} | avg={self.average():.2f} | grade={self.grade()}"
 
     def to_dict(self) -> Dict:
         return {"name": self.name, "scores": self.scores}
